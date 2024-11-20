@@ -1,4 +1,4 @@
-import { createClient } from 'redis';
+const { createClient } = require('redis'); // CommonJS import
 
 class RedisClient {
   constructor() {
@@ -39,4 +39,4 @@ class RedisClient {
 }
 
 const redisClient = new RedisClient();
-module.exports = redisClient;
+module.exports = redisClient; // Exporting using CommonJS
