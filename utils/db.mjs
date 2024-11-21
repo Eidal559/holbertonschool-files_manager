@@ -1,4 +1,4 @@
-const { MongoClient } = require('mongodb');
+import { MongoClient } from 'mongodb';
 
 const host = process.env.DB_HOST || 'localhost';
 const port = process.env.DB_PORT || 27017;
@@ -7,25 +7,32 @@ const url = `mongodb://${host}:${port}`;
 
 class DBClient {
   constructor() {
-    MongoClient.connect(url, (err, client) => {
-      if (!err) {
+    this.client = null;
+    this.db = null;
+
+    // Connect to MongoDB
+    MongoClient.connect(url)
+      .then((client) => {
+        this.client = client;
         this.db = client.db(database);
-      } else {
-        this.db = false;
-      }
-    });
+        console.log('Connected to MongoDB');
+      })
+      .catch((err) => {
+        console.error('Failed to connect to MongoDB:', err);
+      });
   }
 
   isAlive() {
-    if (this.db) return true;
-    return false;
+    return !!this.db; // Return true if the database connection exists
   }
 
   async nbUsers() {
+    if (!this.db) return 0; // Return 0 if the database is not connected
     return this.db.collection('users').countDocuments();
   }
 
   async nbFiles() {
+    if (!this.db) return 0; // Return 0 if the database is not connected
     return this.db.collection('files').countDocuments();
   }
 }
