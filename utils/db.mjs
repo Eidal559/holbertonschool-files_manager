@@ -1,4 +1,5 @@
-import { MongoClient } from 'mongodb';
+import dbClient from '../utils/db.mjs';
+
 
 class DBClient {
   constructor() {
